@@ -30,13 +30,14 @@
 
         isPlaying = false;
         //Here we are just adding the eventlistener to the play which is the element 
+        //Pause the music
         const pauseMusic = () => {
             isPlaying = false;
             music.pause();  //Built in function for the audio class.
             play.classList.replace("fa-pause","fa-play"); // Here we are just replacing the class. Classlist is used to play with the classes of the html tag.
             img.classList.remove("anime"); //anime is a class which is used gto rotate the image.
         };
-
+        //Play the music
         const playMusic = () => {
             isPlaying = true;
             music.play();  //Built in function for the html audio tag.
@@ -53,6 +54,52 @@
                 playMusic();
             }
         });
+
+        //Prev and forward functionality
+        //--------------------So bascially we are making a array of songs and then we are checking that when user clicks the
+        //next button then we are taking him to the function where we are adding 1 in the array of the songs index and then 
+        //passing that object of array to the playSongs function which is used to update the title and artist of the songs.
+        const songs = [
+            {
+                title : "Joona",
+                artist : "Hasan",
+            },
+
+            {
+                title : "irraday",
+                artist : "abdul hanan"
+            },
+            {
+                title : "22",
+                artist : "tay tay"
+            }
+
+        ];
+        song_no = 0;
+        const goNext = () => {
+            song_no = song_no + 1;
+            playSongs(songs[song_no]); 
+        }
+
+        const goPrev = () => {
+            song_no = song_no - 1;
+            playSongs(songs[song_no]); 
+        }
+
+        const playSongs = (songs) => {
+            title.textContent = songs.title;
+            artist.textContent = songs.artist;
+            
+        }
+        
+        next.addEventListener("click", goNext);
+        prev.addEventListener("click", goPrev);
+
+        
+        
+
+
+
         
     </script>
 </body>
