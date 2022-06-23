@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
     <title>Document</title>
 </head>
 <body>
@@ -27,6 +29,7 @@
     <script type="text/javascript">
         const music = document.querySelector("audio");
         const play = document.getElementById("play");
+        const image = document.querySelector("img");
 
         isPlaying = false;
         //Here we are just adding the eventlistener to the play which is the element 
@@ -35,14 +38,14 @@
             isPlaying = false;
             music.pause();  //Built in function for the audio class.
             play.classList.replace("fa-pause","fa-play"); // Here we are just replacing the class. Classlist is used to play with the classes of the html tag.
-            img.classList.remove("anime"); //anime is a class which is used gto rotate the image.
+            image.classList.remove("anime"); //anime is a class which is used gto rotate the image.
         };
         //Play the music
         const playMusic = () => {
             isPlaying = true;
             music.play();  //Built in function for the html audio tag.
             play.classList.replace("fa-play","fa-pause"); // Here we are just replacing the class. Classlist is used to play with the classes of the html tag.
-            img.classList.add("anime"); //anime is a class which is used gto rotate the image.
+            image.classList.add("anime"); //anime is a class which is used gto rotate the image.
         };
        
 
@@ -61,35 +64,53 @@
         //passing that object of array to the playSongs function which is used to update the title and artist of the songs.
         const songs = [
             {
-                title : "Joona",
+                name : "music-1",
+                title : "Lotus lane",
                 artist : "Hasan",
             },
 
             {
-                title : "irraday",
-                artist : "abdul hanan"
+                name: "Stomping-Rock",
+                title : "Stomping-Rock",
+                artist : "AlexGrohl"
             },
             {
-                title : "22",
-                artist : "tay tay"
+                name: "Winning-Elevation",
+                title : "Winning-Elevation",
+                artist : "Hot Music"
             }
 
         ];
         song_no = 0;
         const goNext = () => {
-            song_no = song_no + 1;
+            song_no = (song_no + 1) % songs.length;
             playSongs(songs[song_no]); 
         }
 
+        //We are using this formula for goPrev because here if we are having song_no and we go previous then value will 
+        //be negative to deal with that we are making two formulas. Or just use absolute method :)
         const goPrev = () => {
-            song_no = song_no - 1;
+            // if(song_no == 0)
+            // {
+            //     song_no = (song_no - 1 + songs.length) % songs.length;
+            // }
+            // else
+            // {
+            //     song_no = (song_no - 1) % songs.length;
+            // }
+            song_no = Math.abs(song_no - 1 + songs.length) % songs.length;
+            
             playSongs(songs[song_no]); 
         }
 
         const playSongs = (songs) => {
             title.textContent = songs.title;
             artist.textContent = songs.artist;
-            
+            music.src = `music/${songs.name}.mp3`;
+            console.log(music.src)
+            image.src = `images/${songs.name}.jpg`;
+            console.log(image.src)
+            music.play();
         }
         
         next.addEventListener("click", goNext);
