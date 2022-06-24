@@ -18,6 +18,19 @@
                 <img src="images/music-1.jpg" alt="">
             </div>
             <audio src="music/music-1.mp3"></audio>
+
+            <!--progress bar-->
+            <div class="progressbar_container" id="progress_container">
+                <div class="progress_duration_meter">
+                    <div id="current_time">0:00</div>
+                    <div id="duration">2:44</div>
+                </div>
+                <div class="progress_div" id="progress_div">
+                    <div class="progress" id="progress"></div>
+                </div>
+            </div>
+
+
             <!-- Controls -->
             <div class="music_controls">
                 <i class="fas fa-backward" id="prev" title="Previous"></i>
@@ -30,6 +43,11 @@
         const music = document.querySelector("audio");
         const play = document.getElementById("play");
         const image = document.querySelector("img");
+        const artist = document.getElementById('artist');
+        const title = document.getElementById('title');
+        const prev = document.getElementById('prev');
+        const next = document.getElementById('next');
+        const progress_bar = document.getElementById('progress');
 
         isPlaying = false;
         //Here we are just adding the eventlistener to the play which is the element 
@@ -112,6 +130,17 @@
             console.log(image.src)
             music.play();
         }
+
+        music.addEventListener("timeupdate",(event) =>{
+            const {currentTime, duration} = event.srcElement;
+            // console.log(currentTime);
+            // console.log(duration);
+
+            // Here we are basically claculating the percentage that is completed in terms of 
+            // the song. ( currentTime / Total_duration ) * 100
+            let progressTime = (currentTime / duration) * 100;
+            progress_bar.style.width = `${progressTime}%`;
+        });
         
         next.addEventListener("click", goNext);
         prev.addEventListener("click", goPrev);
