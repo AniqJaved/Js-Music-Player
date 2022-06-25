@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <title>Document</title>
+</head>
+<body>
+    <div class="main_div">
+        <div class="music_container">
+            <h2 id="title">Lotus lane</h2>
+            <h3 id="artist">The Loyalist</h3>
+            <div class="img_container">
+                <img src="images/music-1.jpg" alt="">
+            </div>
+            <audio src="music/music-1.mp3"></audio>
+
+            <!--progress bar-->
+            <div class="progressbar_container" id="progress_container">
+                <div class="progress_duration_meter">
+                    <div id="current_time">0:00se</div>
+                    <div id="duration">0:00mi</div>
+                </div>
+                <div class="progress_div" id="progress_div">
+                    <div class="progress" id="progress"></div>
+                </div>
+            </div>
+
+
+            <!-- Controls -->
+            <div class="music_controls">
+                <i class="fas fa-backward" id="prev" title="Previous"></i>
+                <i class="fas fa-play main_button" id="play" title="Previous"></i>
+                <i class="fas fa-forward" id="next" title="Next"></i>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        const music = document.querySelector("audio");
+        const play = document.getElementById("play");
+        const image = document.querySelector("img");
+        const artist = document.getElementById('artist');
+        const title = document.getElementById('title');
+        const prev = document.getElementById('prev');
+        const next = document.getElementById('next');
+        const progress_bar = document.getElementById('progress');
+        const progress_div = document.getElementById('progress_div');
+        const current_time = document.getElementById('current_time');
+        const duration_total = document.getElementById('duration');
+
+        isPlaying = false;
+        //Here we are just adding the eventlistener to the play which is the element 
+        //Pause the music
+        const pauseMusic = () => {
+            isPlaying = false;
+            music.pause();  //Built in function for the audio class.
+            play.classList.replace("fa-pause","fa-play"); // Here we are just replacing the class. Classlist is used to play with the classes of the html tag.
+            image.classList.remove("anime"); //anime is a class which is used gto rotate the image.
+        };
+        //Play the music
+        const playMusic = () => {
+            isPlaying = true;
+            music.play();  //Built in function for the html audio tag.
+            play.classList.replace("fa-play","fa-pause"); // Here we are just replacing the class. Classlist is used to play with the classes of the html tag.
+            image.classList.add("anime"); //anime is a class which is used gto rotate the image.
+        };
+       
+
+        play.addEventListener("click",()=>{
+            if(isPlaying){
+                pauseMusic();
+            }
+            else{
+                playMusic();
+            }
+        });
+
+        //Prev and forward functionality
+        //--------------------So bascially we are making a array of songs and then we are checking that when user clicks the
+        //next button then we are taking him to the function where we are adding 1 in the array of the songs index and then 
+        //passing that object of array to the playSongs function which is used to update the title and artist of the songs.
+        const songs = [
+            {
+                name : "music-1",
+                title : "Lotus lane",
+                artist : "Hasan",
+            },
+
+            {
+                name: "Stomping-Rock",
+                title : "Stomping-Rock",
+                artist : "AlexGrohl"
+            },
+            {
+                name: "Winning-Elevation",
+                title : "Winning-Elevation",
+                artist : "Hot Music"
+            }
+
+        ];
+        song_no = 0;
+        const goNext = () => {
+            song_no = (song_no + 1) % songs.length;
+            playSongs(songs[song_no]); 
+        }
+
+        //We are using this formula for goPrev because here if we are having song_no and we go previous then value will 
+        //be negative to deal with that we are making two formulas. Or just use absolute method :)
+        const goPrev = () => {
+            // if(song_no == 0)
+            // {
+            //     song_no = (song_no - 1 + songs.length) % songs.length;
+            // }
+            // else
+            // {
+            //     song_no = (song_no - 1) % songs.length;
+            // }
+            song_no = Math.abs(song_no - 1 + songs.length) % songs.length;
+            
+            playSongs(songs[song_no]); 
+        }
+
+        const playSongs = (songs) => {
+            title.textContent = songs.title;
+            artist.textContent = songs.artist;
+            music.src = `music/${songs.name}.mp3`;
+            console.log(music.src)
+            image.src = `images/${songs.name}.jpg`;
+            console.log(image.src)
+            music.play();
+        }
+
+        // This event listener is giving us the the values when the song is played. We are putting event in the arguments
+        // because it is giving us all the elements when the song is played by default.
+        music.addEventListener("timeupdate",(event) =>{
+            const {currentTime, duration} = event.srcElement;
+            // console.log(currentTime);
+            // console.log(duration);
+
+            // Here we are basically claculating the percentage that is completed in terms of 
+            // the song. ( currentTime / Total_duration ) * 100
+            let progressTime = (currentTime / duration) * 100;
+
+            //------Duration and Current time---------//
+            // Here we are using tofixed function because it will be reducing the decimal places to zero. 
+            let duration_min = (duration / 60).toFixed(0);
+            let duration_sec = (duration % 60).toFixed(0);
+            // Here we are using the floor fucntion because the split function was not giving us the required functionlaity.
+            // So floor fucntion is used to just get the minutes and then the seconds. Also we are using the the if statement to
+            // show the 0 literal.
+            let current_time_fixed = currentTime;
+            let current_time_fixed_sec = Math.floor(current_time_fixed % 60);
+            if(current_time_fixed_sec < 10){
+                current_time_fixed_sec = `0${current_time_fixed_sec}`;
+            }
+            let current_time_fixed_min = Math.floor(current_time_fixed / 60);
+            progress_bar.style.width = `${progressTime}%`;
+            current_time.textContent = `${current_time_fixed_min}:${current_time_fixed_sec}`;
+            duration_total.textContent = `${duration_min}:${duration_sec}`;
+
+
+        });
+       
+    
+        // When clicking on the progress bar functionality
+        // Here are we taking the place where we clicked i.e. offsetX and also the total width of the progress bar width i.e.
+        // clientWidth and then we are dividing them to get the percentage and we multiply it with duration we are getting the
+        // the total percentage wrt to duration.
+
+        // currentTime is the built in functionalty which will run the progress bar from the place we clicked.
+        progress_div.addEventListener("click",(event) => {
+            const {duration} = music; // const duration = music.duration;
+            console.log(event);
+            let move_progress_bar = (event.offsetX / event.srcElement.clientWidth) * duration;
+            music.currentTime = move_progress_bar; 
+        });
+
+        //If music end call next song
+        music.addEventListener("ended", goNext)
+
+        next.addEventListener("click", goNext);
+        prev.addEventListener("click", goPrev);
+
+        
+        
+
+
+
+        
+    </script>
+</body>
+</html>
