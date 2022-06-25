@@ -22,8 +22,8 @@
             <!--progress bar-->
             <div class="progressbar_container" id="progress_container">
                 <div class="progress_duration_meter">
-                    <div id="current_time">0:00</div>
-                    <div id="duration">2:44</div>
+                    <div id="current_time">:00</div>
+                    <div id="duration"></div>
                 </div>
                 <div class="progress_div" id="progress_div">
                     <div class="progress" id="progress"></div>
@@ -48,6 +48,8 @@
         const prev = document.getElementById('prev');
         const next = document.getElementById('next');
         const progress_bar = document.getElementById('progress');
+        const current_time = document.getElementById('current_time');
+        const duration_total = document.getElementById('duration');
 
         isPlaying = false;
         //Here we are just adding the eventlistener to the play which is the element 
@@ -131,6 +133,8 @@
             music.play();
         }
 
+        // This event listener is giving us the the values when the song is played. We are putting event in the arguments
+        // because it is giving us all the elements when the song is played by default.
         music.addEventListener("timeupdate",(event) =>{
             const {currentTime, duration} = event.srcElement;
             // console.log(currentTime);
@@ -139,7 +143,22 @@
             // Here we are basically claculating the percentage that is completed in terms of 
             // the song. ( currentTime / Total_duration ) * 100
             let progressTime = (currentTime / duration) * 100;
+
+            
+            let duration_min = (duration / 60).toFixed(0);
+            let duration_sec = (duration % 60).toFixed(0);
+            
+            let current_time_fixed = currentTime;
+            let current_time_fixed_sec = Math.floor(current_time_fixed % 60);
+            if(current_time_fixed_sec < 10){
+                current_time_fixed_sec = `0${current_time_fixed_sec}`;
+            }
+            let current_time_fixed_min = Math.floor(current_time_fixed / 60);
             progress_bar.style.width = `${progressTime}%`;
+            current_time.textContent = `${current_time_fixed_min}:${current_time_fixed_sec}`;
+            duration_total.textContent = `${duration_min}:${duration_sec}`;
+
+
         });
         
         next.addEventListener("click", goNext);
