@@ -48,6 +48,7 @@
         const prev = document.getElementById('prev');
         const next = document.getElementById('next');
         const progress_bar = document.getElementById('progress');
+        const progress_div = document.getElementById('progress_div');
         const current_time = document.getElementById('current_time');
         const duration_total = document.getElementById('duration');
 
@@ -144,10 +145,13 @@
             // the song. ( currentTime / Total_duration ) * 100
             let progressTime = (currentTime / duration) * 100;
 
-            
+            //------Duration and Current time---------//
+            // Here we are using tofixed function because it will be reducing the decimal places to zero. 
             let duration_min = (duration / 60).toFixed(0);
             let duration_sec = (duration % 60).toFixed(0);
-            
+            // Here we are using the floor fucntion because the split function was not giving us the required functionlaity.
+            // So floor fucntion is used to just get the minutes and then the seconds. Also we are using the the if statement to
+            // show the 0 literal.
             let current_time_fixed = currentTime;
             let current_time_fixed_sec = Math.floor(current_time_fixed % 60);
             if(current_time_fixed_sec < 10){
@@ -160,7 +164,24 @@
 
 
         });
-        
+       
+    
+        // When clicking on the progress bar functionality
+        // Here are we taking the place where we clicked i.e. offsetX and also the total width of the progress bar width i.e.
+        // clientWidth and then we are dividing them to get the percentage and we multiply it with duration we are getting the
+        // the total percentage wrt to duration.
+
+        // currentTime is the built in functionalty which will run the progress bar from the place we clicked.
+        progress_div.addEventListener("click",(event) => {
+            const {duration} = music; // const duration = music.duration;
+            console.log(event);
+            let move_progress_bar = (event.offsetX / event.srcElement.clientWidth) * duration;
+            music.currentTime = move_progress_bar; 
+        });
+
+        //If music end call next song
+        music.addEventListener("ended", goNext)
+
         next.addEventListener("click", goNext);
         prev.addEventListener("click", goPrev);
 
