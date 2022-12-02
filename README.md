@@ -1,9 +1,6 @@
 # Js-Music-Player
 
 
-# Layout for portfolio website
-
-
 ### Participants
 
 Github : @AniqJaved
@@ -12,7 +9,7 @@ Discord : AniqJaved#4687
 
 ### Description
 
-This is the layout for a portfolio website. 
+This is the music player with dynamic functanlities. 
 
 ### Live demo
 
